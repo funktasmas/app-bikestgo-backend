@@ -2,7 +2,6 @@
 from django.core.cache import cache
 from django.db import models
 from django.conf import settings
-from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
 class Station(models.Model):
@@ -37,12 +36,6 @@ class Station(models.Model):
             cache.set(cache_key, data, settings.API_CACHE)
         return data
 
-    def get_all_data(self):
-        data = []
-        for d in self.get_data().order_by('-date'):
-            data.append(d.get_data_dict())
-        return data
-
     def get_last_data(self):
         try:
             last = self.get_data().latest('date')
@@ -54,13 +47,8 @@ class Station(models.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'nomenclature': self.nomenclature,
             'id_api': self.id_api,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'state': self.state,
             'city': self.city,
-            'all': self.get_all_data(),
             'last': self.get_last_data(),
         }
 
@@ -101,6 +89,5 @@ class Data(models.Model):
         return {
             'free_bikes': self.free_bikes,
             'empty_slots': self.empty_slots,
-            'date_api': naturaltime(self.date_api.timestamp()),
-            'date': self.date.timestamp(),
+            'date_api': self.date_api.timestamp(),
         }
