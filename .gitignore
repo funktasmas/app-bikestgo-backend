@@ -1,0 +1,13 @@
+
+# extensions #
+*.pyc
+.DS_Store
+
+# directory #
+.envs/
+.vscode/
+log/
+cache/
+
+# file #
+db.sqlite3
